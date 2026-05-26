@@ -1,294 +1,157 @@
-# Campus Lost & Found System
-## 校园失物招领系统
+# Campus Lost & Found Web System
+
+> A modern, responsive campus lost and found management system built with HTML, CSS, and JavaScript.
+
+![Theme](https://img.shields.io/badge/Theme-Dark%20%7C%20Light-blue)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat&logo=javascript&logoColor=black)
 
 ---
 
-## 1. 项目概述
+## Features
 
-### 1.1 项目目标
-开发一个智能化的校园失物招领管理系统，帮助师生快速报告、查找和认领遗失物品，减少物品丢失带来的损失，提高校园物品归还率。
-
-### 1.2 应用目的
-- 为失主提供一个便捷的报告和找回物品的渠道
-- 为拾得者提供一个方便上交失物的平台
-- 通过智能匹配算法自动关联失物和招领信息
-- 减少校园失物招领的人工管理工作量
-
-### 1.3 目标用户
-| 用户类型 | 需求描述 |
-|----------|----------|
-| 丢失物品的学生/教职工 | 快速报告失物、查看招领信息、提交认领 |
-| 拾得物品的师生 | 方便地报告捡到的物品 |
-| 后勤管理人员 | 审核认领、管理物品状态、导出数据 |
+| Feature | Description |
+|---------|-------------|
+| Browse Items | View all lost and found items in a beautiful card grid layout |
+| Search & Filter | Real-time search with filters for type, category, and date |
+| Report Items | Submit lost or found item reports easily |
+| User Authentication | Register and login to access personalized features |
+| Contact Support | Get help through the contact page |
+| Responsive Design | Works perfectly on desktop, tablet, and mobile devices |
+| Dark/Light Theme | Toggle between themes for comfortable viewing |
+| Glass Morphism UI | Modern Apple-style frosted glass design |
 
 ---
 
-## 2. 系统架构
+## Quick Start
 
-### 2.1 技术栈
-```
-前端技术:
-├── HTML5        - 页面结构
-├── CSS3         - 样式设计 (玻璃态效果、双主题)
-├── JavaScript   - 交互逻辑
-└── localStorage - 本地数据存储 (模拟数据库)
+```bash
+# Clone the repository
+git clone https://github.com/god-zzq/campus-lost-found-system.git
 
-设计特点:
-├── 响应式设计 - 适配桌面和移动设备
-├── 双主题系统 - 深色(Aurora Dark) / 浅色(Sunrise Light)
-└── 玻璃态UI  - Apple风格毛玻璃效果
-```
-
-### 2.2 系统流程图
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        用户操作流程                                    │
-└─────────────────────────────────────────────────────────────────────┘
-
-[开始] → [选择操作]
-              │
-              ├─→ [报告失物] ─→ 填写表单 ─→ 智能匹配 ─→ 保存成功
-              │                              ↓
-              │                         显示可能匹配
-              │
-              ├─→ [报告招领] ─→ 填写表单 ─→ 保存成功
-              │
-              ├─→ [浏览物品] ─→ 筛选/搜索 ─→ 查看详情
-              │                              ↓
-              │                         认领物品(如需)
-              │
-              └─→ [认领物品] ─→ 填写证明 ─→ 等待审核
-```
-
-### 2.3 智能匹配算法
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                      智能匹配评分系统                                   │
-└─────────────────────────────────────────────────────────────────────┘
-
-                    失物报告 / 招领报告
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │   类别匹配检查   │ ─── +30分
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │   名称相似度    │ ─── 完全包含 +25分
-                  │                 │ ─── 部分包含 +15分
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │  区域位置匹配   │ ─── +20分
-                  └────────┬────────┘
-                           │
-                           ▼
-                    ┌─────────────┐
-                    │   计算总分   │
-                    └──────┬──────┘
-                           │
-           ┌───────────────┼───────────────┐
-           │               │               │
-           ▼               ▼               ▼
-      High (≥55)     Medium (≥40)    Low (≥25)
-      高优先级        中优先级        低优先级
-```
-
-### 2.4 数据状态流转
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                      物品状态流转                                     │
-└─────────────────────────────────────────────────────────────────────┘
-
-     报告
-       │
-       ▼
-   ┌────────┐
-   │Pending │ ← 当前物品初始状态
-   └────┬───┘
-        │
-        ├─→ [认领请求] ─→ ┌────────┐
-        │                 │Claimed │ ← 有人提交了认领
-        │                 └────┬───┘
-        │                      │
-        │            ┌─────────┼─────────┐
-        │            │                     │
-        │            ▼                     ▼
-        │     ┌────────────┐       ┌────────────┐
-        │     │  审核通过  │       │  审核拒绝  │
-        │     └─────┬──────┘       └─────┬──────┘
-        │           │                    │
-        │           └────────┬───────────┘
-        │                    │
-        │                    ▼
-        │              返回 Pending
-        │
-        └─→ [标记归还] ─→ ┌─────────┐
-                        │Returned │ ← 最终状态
-                        └─────────┘
+# Open index.html in browser
+# No server required - works directly!
 ```
 
 ---
 
-## 3. 功能模块
+## Pages Overview
 
-### 3.1 首页 (index.html)
-```
-功能:
-├── 系统介绍和快速入口
-├── 统计数据展示 (总数/丢失/招领/已认领/已归还/紧急)
-├── 快捷操作入口
-└── 最近活动日志
-```
-
-### 3.2 报告页面 (report.html)
-```
-功能:
-├── 物品类型选择 (丢失/招领)
-├── 物品信息录入 (名称、类别、描述)
-├── 位置信息 (校区区域、具体位置)
-├── 紧急程度选择 (高/中/低)
-├── 图片上传预览 (仅本地预览)
-├── 即时智能匹配提示
-└── 提交后显示匹配结果
-```
-
-### 3.3 浏览管理页面 (items.html)
-```
-功能:
-├── 多维度筛选 (类型/类别/区域/状态)
-├── 日期范围筛选
-├── 关键词搜索
-├── 排序方式 (最新/最旧/优先级)
-├── 物品卡片展示
-├── 详情抽屉面板
-│   ├── 完整物品信息
-│   ├── 认领列表管理
-│   ├── 智能匹配建议
-│   └── 状态时间线
-├── 认领请求表单
-├── 匹配收件箱
-├── 认领审核中心 (管理模式)
-└── 导出CSV功能 (管理模式)
-```
-
-### 3.4 帮助页面 (contact.html)
-```
-功能:
-├── 联系方式展示
-├── 快速提示
-├── 留言表单
-└── 快捷链接
-```
+| Page | File | Description |
+|------|------|-------------|
+| Home | `index.html` | System intro, statistics, recent items, quick actions |
+| Browse | `items.html` | Search, filter, view all items in grid layout |
+| Report | `report.html` | Submit new lost or found item reports |
+| Contact | `contact.html` | Help center info, contact form, FAQ |
+| Auth | `auth.html` | Login, register, forgot password |
+| Terms | `terms.html` | Terms of service |
+| Privacy | `privacy.html` | Privacy policy |
 
 ---
 
-## 4. 核心代码说明
-
-### 4.1 数据结构 (Items)
-```javascript
-// 单个物品的数据结构
-{
-    id: "LF-XXXXXX-ABCD",      // 唯一标识
-    type: "Lost" | "Found",     // 物品类型
-    name: "iPhone 14 Pro",      // 物品名称
-    category: "Phone",          // 物品类别
-    locationZone: "Library",   // 校区区域
-    location: "3rd Floor",    // 具体位置
-    date: "2026-05-20",        // 日期
-    description: "...",         // 详细描述
-    contact: "email@example.com", // 联系方式
-    urgency: "High",            // 紧急程度
-    status: "Pending",          // 状态
-    claims: [                   // 认领列表
-        {
-            claimantName: "张三",
-            contact: "...",
-            proof: "描述证明",
-            createdAt: timestamp,
-            reviewed: false
-        }
-    ],
-    createdAt: timestamp        // 创建时间
-}
-```
-
-### 4.2 关键函数说明
-
-#### 智能匹配 (findPossibleMatches)
-```javascript
-// 查找与新物品可能匹配的其他物品
-// 1. 筛选相反类型的物品 (失物配招领)
-// 2. 按类别、名称、位置评分
-// 3. 返回匹配度最高的物品
-```
-
-#### 物品渲染 (renderItems)
-```javascript
-// 核心渲染函数
-// 1. 获取所有物品数据
-// 2. 应用筛选条件
-// 3. 应用排序规则
-// 4. 生成卡片HTML
-```
-
----
-
-## 5. 页面结构
+## Project Structure
 
 ```
 campus_lost_found_system/
-│
-├── index.html        # 首页 - 系统介绍、统计、快捷入口
-├── report.html       # 报告页 - 新增失物/招领记录
-├── items.html        # 浏览页 - 查看、搜索、管理物品
-├── contact.html      # 帮助页 - 联系方式、留言
-│
-├── style.css         # 样式表 - 玻璃态UI、双主题
-└── script.js         # 脚本 - 所有业务逻辑
+├── index.html          # Home page
+├── items.html          # Browse items page
+├── report.html         # Report item page
+├── contact.html        # Contact/help page
+├── auth.html           # Login/Register page
+├── terms.html          # Terms of service
+├── privacy.html        # Privacy policy
+├── style.css           # Main styles
+├── auth.css            # Auth page styles
+├── script.js           # Main functionality
+├── auth.js             # Authentication logic
+└── README.md           # Documentation
 ```
 
 ---
 
-## 6. 演示模式说明
+## Management Mode
 
-### 管理模式密码: `admin123`
+Access the management mode with password: `admin123`
 
-管理模式下可用的功能:
-- 删除物品
-- 标记物品为已归还
-- 审核认领请求 (批准/拒绝)
-- 导出数据为CSV
-- 重置演示数据
+Features:
+- Delete items
+- Mark items as returned
+- Review claim requests
+- Export data to CSV
 
 ---
 
-## 7. 浏览器兼容性
+## Technology Stack
 
-| 浏览器 | 支持版本 |
-|--------|----------|
+| Technology | Purpose |
+|------------|---------|
+| HTML5 | Page structure and semantic markup |
+| CSS3 | Styling, animations, responsive design |
+| JavaScript (ES6+) | Interactive functionality, logic |
+| localStorage | Client-side data persistence |
+
+---
+
+## For Course Submission
+
+This project includes all required documentation:
+
+| File | Description |
+|------|-------------|
+| `FINAL_PRESENTATION_CONTENT.md` | Complete PPT content outline (14 slides) |
+| `DEMO_VIDEO_SCRIPT.md` | Script for recording demo video |
+| `FINAL_SUBMISSION_CHECKLIST.md` | Checklist to verify all requirements |
+
+### PPT Structure (14 Slides)
+
+1. Title Slide
+2. Project Overview
+3. Introduction
+4. Project Aim and Objectives
+5. Target Users
+6. Main Functions and Features
+7. System Design and Diagrams
+8. Code Logic and Implementation
+9. Flowcharts
+10. Code Comments Example
+11. Demo Video
+12. Conclusion and Future Work
+13. Files to Submit
+14. Thank You
+
+---
+
+## Browser Compatibility
+
+| Browser | Minimum Version |
+|---------|-----------------|
 | Chrome | 80+ |
 | Firefox | 75+ |
 | Safari | 13+ |
 | Edge | 80+ |
 
-**注意**: 本系统使用 localStorage 存储数据，不支持无痕/隐私模式。
+---
+
+## Future Enhancements
+
+- [ ] Backend integration (Node.js, Python, etc.)
+- [ ] Real database (MySQL, PostgreSQL, MongoDB)
+- [ ] Secure password hashing
+- [ ] Image upload functionality
+- [ ] Admin dashboard panel
+- [ ] Email notification system
+- [ ] Mobile app (iOS/Android)
 
 ---
 
-## 8. 部署说明
+## Author
 
-### 本地运行
-1. 下载所有文件到同一目录
-2. 使用浏览器打开 `index.html`
-3. 无需服务器，可直接运行
-
-### 服务器部署
-将整个文件夹部署到任何静态文件服务器即可。
+**Course:** HTML / Web Information Systems
+**Date:** 2026
 
 ---
 
-*文档版本: 1.0*
-*最后更新: 2026-05-24*
+## License
+
+This project was created for educational purposes.
