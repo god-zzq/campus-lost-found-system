@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Item - Campus Lost &amp; Found</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="report-page-body">
+    <div class="dynamic-aurora" aria-hidden="true">
+        <span class="aurora-orb orb-a"></span>
+        <span class="aurora-orb orb-b"></span>
+        <span class="aurora-orb orb-c"></span>
+        <span class="aurora-orb orb-d"></span>
+    </div>
+    <!-- Layer 1: Dynamic Aurora Atmosphere -->
+    <div class="aurora-bg"></div>
+
+    <!-- Layer 2: Liquid Glass Navigation -->
+    <nav class="liquid-navbar" id="navbar">
+        <a href="index.html" class="navbar-brand">
+            <span class="navbar-brand-icon">🔍</span>
+            <span class="navbar-brand-text">Lost &amp; Found</span>
+        </a>
+        <ul class="navbar-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="report.html" class="nav-link active">Report</a></li>
+            <li><a href="items.html" class="nav-link">Browse</a></li>
+            <li><a href="contact.html" class="nav-link">Contact</a></li>
+            <li><a href="auth.html" class="nav-link nav-link-auth" id="navAuthLink">Sign In</a></li>
+        </ul>
+        <div class="navbar-actions">
+            <button class="liquid-theme-btn" id="themeToggle" title="Switch Theme">☀️</button>
+            <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <!-- Layer 3: Main Content -->
+    <main class="report-page">
+        <section class="report-shell">
+            <header class="report-header">
+                <h1 class="page-title">Report Item</h1>
+                <p class="page-subtitle">Submit lost or found item information</p>
+            </header>
+
+            <form id="reportForm" class="report-card">
+                <!-- Item Type -->
+                <div class="form-section">
+                    <h3 class="form-section-title"><span>📋</span> Item Type</h3>
+                    <div class="choice-group">
+                        <label class="choice-pill">
+                            <input type="radio" name="itemType" value="lost">
+                            <span class="choice-dot lost"></span>
+                            <span class="choice-text">Lost Item</span>
+                        </label>
+                        <label class="choice-pill">
+                            <input type="radio" name="itemType" value="found">
+                            <span class="choice-dot found"></span>
+                            <span class="choice-text">Found Item</span>
+                        </label>
+                    </div>
+                    <p class="form-error" id="typeError"></p>
+                </div>
+
+                    <!-- Basic Info -->
+                    <div class="form-section">
+                        <h3 class="form-section-title"><span>📝</span> Item Details</h3>
+                        <div class="form-group">
+                            <label class="form-label" for="itemName"><span>🏷️</span> Item Name</label>
+                            <input type="text" id="itemName" class="form-input" placeholder="e.g. Student ID Card, iPhone 14, Blue Backpack">
+                            <p class="form-error" id="nameError"></p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="itemCategory"><span>📁</span> Category</label>
+                            <select id="itemCategory" class="form-select" required>
+                                <option value="">Select Category</option>
+                                <option value="ID Card">🪪 ID Card</option>
+                                <option value="Phone">📱 Phone</option>
+                                <option value="Bag">🎒 Bag</option>
+                                <option value="Book">📚 Book</option>
+                                <option value="Keys">🔑 Keys</option>
+                                <option value="Laptop">💻 Laptop</option>
+                                <option value="Wallet">👛 Wallet</option>
+                                <option value="Earbuds">🎧 Earbuds</option>
+                                <option value="Other">📦 Other</option>
+                            </select>
+                            <p class="form-error" id="categoryError"></p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><span>⚡</span> Urgency</label>
+                            <div class="choice-group">
+                                <label class="choice-pill">
+                                    <input type="radio" name="itemUrgency" value="High">
+                                    <span class="choice-dot high"></span>
+                                    <span class="choice-text">High</span>
+                                </label>
+                                <label class="choice-pill">
+                                    <input type="radio" name="itemUrgency" value="Medium" checked>
+                                    <span class="choice-dot medium"></span>
+                                    <span class="choice-text">Medium</span>
+                                </label>
+                                <label class="choice-pill">
+                                    <input type="radio" name="itemUrgency" value="Low">
+                                    <span class="choice-dot low"></span>
+                                    <span class="choice-text">Low</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="itemDescription"><span>📝</span> Description</label>
+                            <textarea id="itemDescription" class="form-textarea" rows="3" placeholder="Describe the item: color, brand, size, distinctive features..."></textarea>
+                            <p class="form-error" id="descriptionError"></p>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="form-section">
+                        <h3 class="form-section-title"><span>📍</span> Location &amp; Contact</h3>
+                        <div class="form-group">
+                            <label class="form-label"><span>🏢</span> Campus Zone</label>
+                            <div class="liquid-dropdown" id="zoneDropdown">
+                                <button type="button" class="dropdown-trigger" id="zoneTrigger">
+                                    <span>Select Zone</span>
+                                    <span class="dropdown-arrow">▼</span>
+                                </button>
+                                <div class="dropdown-menu" id="zoneMenu">
+                                    <div class="dropdown-item" data-value="Library">📚 Library</div>
+                                    <div class="dropdown-item" data-value="Canteen">🍽️ Canteen</div>
+                                    <div class="dropdown-item" data-value="Dormitory">🏠 Dormitory</div>
+                                    <div class="dropdown-item" data-value="Classroom">🏫 Classroom</div>
+                                    <div class="dropdown-item" data-value="Sports Area">⚽ Sports Area</div>
+                                    <div class="dropdown-item" data-value="Office">🏢 Office</div>
+                                    <div class="dropdown-item" data-value="Other">📍 Other</div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="locationZone" value="">
+                            <p class="form-error" id="zoneError"></p>
+                        </div>
+                        <div class="form-group" style="margin-top: 1rem;">
+                            <label class="form-label" for="itemLocation"><span>🚪</span> Specific Location</label>
+                            <input type="text" id="itemLocation" class="form-input" placeholder="e.g. 2nd Floor, Table 5, Room 301">
+                            <p class="form-error" id="locationError"></p>
+                        </div>
+                        <div class="form-row" style="margin-top: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="itemDate"><span>📆</span> Date</label>
+                                <input type="date" id="itemDate" class="form-input">
+                                <p class="form-error" id="dateError"></p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="itemContact"><span>📧</span> Contact Email</label>
+                                <input type="text" id="itemContact" class="form-input" placeholder="your.email@example.edu">
+                                <p class="form-error" id="contactError"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="form-section">
+                        <h3 class="form-section-title"><span>📷</span> Image (Optional)</h3>
+                        <div class="image-upload" id="imageUploadArea">
+                            <div class="image-upload-icon">📷</div>
+                            <p class="image-upload-text">Click or drag image here</p>
+                            <p class="image-upload-note">Preview only - not uploaded to server</p>
+                        </div>
+                        <input type="file" id="itemImage" accept="image/*" style="display: none;">
+                        <div class="image-preview" id="imagePreview" style="display: none;">
+                            <img id="previewImg" src="" alt="Preview">
+                            <span class="image-preview-remove" id="removeImageBtn">×</span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="liquid-btn liquid-btn-primary liquid-btn-lg" style="flex: 2;">
+                            <span>📋</span> Submit Report
+                        </button>
+                        <button type="reset" class="liquid-btn liquid-btn-secondary liquid-btn-lg" style="flex: 1;">
+                            <span>🔄</span> Reset
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Form Feedback -->
+                <div class="glass-alert" id="formFeedback"></div>
+            </section>
+        </section>
+    </main>
+
+    <footer class="glass-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="footer-icon">🔍</span>
+                <div>
+                    <span class="footer-title">Campus Lost &amp; Found System</span>
+                    <span class="footer-subtitle">Helping students reunite with belongings</span>
+                </div>
+            </div>
+            <div class="footer-info">
+                <p>Front-end prototype • Sample data only</p>
+                <p>© 2026 Campus Services Project</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script src="script.js" defer></script>
+    <script>
+        window.addEventListener('scroll', function() {
+            var navbar = document.getElementById('navbar');
+            if (navbar) {
+                if (window.scrollY > 20) navbar.classList.add('nav-scrolled');
+                else navbar.classList.remove('nav-scrolled');
+            }
+        });
+
+        var dateInput = document.getElementById('itemDate');
+        if (dateInput) dateInput.valueAsDate = new Date();
+
+        var form = document.getElementById('reportForm');
+        if (form) {
+            form.addEventListener('reset', function() {
+                setTimeout(function() {
+                    var d = document.getElementById('itemDate');
+                    if (d) d.valueAsDate = new Date();
+                    var fb = document.getElementById('formFeedback');
+                    if (fb) { fb.className = 'glass-alert'; fb.style.display = 'none'; }
+                }, 10);
+            });
+        }
+    </script>
+</body>
+</html>

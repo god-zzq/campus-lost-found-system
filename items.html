@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found Center - Browse Items</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="browse-page-body">
+    <div class="dynamic-aurora" aria-hidden="true">
+        <span class="aurora-orb orb-a"></span>
+        <span class="aurora-orb orb-b"></span>
+        <span class="aurora-orb orb-c"></span>
+        <span class="aurora-orb orb-d"></span>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="liquid-navbar" id="navbar">
+        <a href="index.html" class="navbar-brand">
+            <span class="navbar-brand-icon">🔍</span>
+            <span class="navbar-brand-text">Lost & Found</span>
+        </a>
+        <ul class="navbar-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="report.html" class="nav-link">Report</a></li>
+            <li><a href="items.html" class="nav-link active">Browse</a></li>
+            <li><a href="contact.html" class="nav-link">Contact</a></li>
+            <li><a href="auth.html" class="nav-link nav-link-auth" id="navAuthLink">Sign In</a></li>
+        </ul>
+        <div class="navbar-actions">
+            <button class="liquid-theme-btn" id="themeToggle" title="Switch Theme">☀️</button>
+            <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <!-- Browse Page -->
+    <main class="browse-page">
+        <section class="browse-shell">
+
+            <!-- Header -->
+            <header class="browse-header">
+                <h1>Lost & Found Center</h1>
+                <p>Browse, search, and manage campus lost/found item records</p>
+            </header>
+
+            <!-- Stats Grid -->
+            <section class="stats-grid">
+                <article class="stat-card glass-card">
+                    <span class="stat-icon">📦</span>
+                    <div class="stat-content">
+                        <span class="stat-number" id="statTotal">0</span>
+                        <span class="stat-label">Total</span>
+                    </div>
+                </article>
+
+                <article class="stat-card glass-card">
+                    <span class="stat-icon">🔴</span>
+                    <div class="stat-content">
+                        <span class="stat-number" id="statLost">0</span>
+                        <span class="stat-label">Lost</span>
+                    </div>
+                </article>
+
+                <article class="stat-card glass-card">
+                    <span class="stat-icon">🟢</span>
+                    <div class="stat-content">
+                        <span class="stat-number" id="statFound">0</span>
+                        <span class="stat-label">Found</span>
+                    </div>
+                </article>
+
+                <article class="stat-card glass-card">
+                    <span class="stat-icon">📬</span>
+                    <div class="stat-content">
+                        <span class="stat-number" id="statClaimed">0</span>
+                        <span class="stat-label">Claimed</span>
+                    </div>
+                </article>
+
+                <article class="stat-card glass-card">
+                    <span class="stat-icon">✅</span>
+                    <div class="stat-content">
+                        <span class="stat-number" id="statReturned">0</span>
+                        <span class="stat-label">Returned</span>
+                    </div>
+                </article>
+
+                <article class="stat-card glass-card">
+                    <span class="stat-icon">⚡</span>
+                    <div class="stat-content">
+                        <span class="stat-number" id="statHigh">0</span>
+                        <span class="stat-label">High</span>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Filter Command Bar -->
+            <section class="filter-command">
+
+                <!-- Primary Row -->
+                <div class="filter-primary">
+                    <label class="search-control">
+                        <span class="search-icon">🔍</span>
+                        <input id="searchInput" type="text" placeholder="Search items...">
+                    </label>
+
+                    <div class="date-range" style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
+                        <div class="date-field" style="display: flex; align-items: center; gap: 8px; padding: 0 16px; height: 46px; border-radius: 999px; background: var(--control-bg); border: 1px solid var(--glass-border); box-sizing: border-box;">
+                            <span class="date-field-label" style="font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); white-space: nowrap;">FROM</span>
+                            <input id="fromDateInput" type="date" aria-label="From date" style="width: 110px; height: 30px; padding: 0; border: none; outline: none; background: transparent; color: var(--text-main); font-size: 0.88rem; font-weight: 700; cursor: pointer;">
+                        </div>
+
+                        <span class="date-arrow" style="font-size: 0.9rem; font-weight: 600; color: var(--text-muted); flex-shrink: 0; opacity: 0.6;">—</span>
+
+                        <div class="date-field" style="display: flex; align-items: center; gap: 8px; padding: 0 16px; height: 46px; border-radius: 999px; background: var(--control-bg); border: 1px solid var(--glass-border); box-sizing: border-box;">
+                            <span class="date-field-label" style="font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); white-space: nowrap;">TO</span>
+                            <input id="toDateInput" type="date" aria-label="To date" style="width: 110px; height: 30px; padding: 0; border: none; outline: none; background: transparent; color: var(--text-main); font-size: 0.88rem; font-weight: 700; cursor: pointer;">
+                        </div>
+                    </div>
+
+                    <a class="add-item-btn" href="report.html">
+                        <span class="btn-icon">+</span>
+                        <span class="btn-label">Add Item</span>
+                    </a>
+                </div>
+
+                <!-- Secondary Row -->
+                <div class="filter-secondary">
+                    <div class="liquid-dropdown" id="typeDropdown">
+                        <button type="button" class="dropdown-trigger" id="typeTrigger">
+                            <span id="typeSelected">Type</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="typeMenu">
+                            <div class="dropdown-item" data-value=""><span class="option-icon">📋</span><span class="option-label">All Types</span></div>
+                            <div class="dropdown-item" data-value="lost"><span class="option-icon">🔴</span><span class="option-label">Lost</span></div>
+                            <div class="dropdown-item" data-value="found"><span class="option-icon">🟢</span><span class="option-label">Found</span></div>
+                        </div>
+                    </div>
+
+                    <div class="liquid-dropdown" id="categoryDropdown">
+                        <button type="button" class="dropdown-trigger" id="categoryTrigger">
+                            <span id="categorySelected">Category</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="categoryMenu">
+                            <div class="dropdown-item" data-value=""><span class="option-icon">📦</span><span class="option-label">All Categories</span></div>
+                            <div class="dropdown-item" data-value="ID Card"><span class="option-icon">🪪</span><span class="option-label">ID Card</span></div>
+                            <div class="dropdown-item" data-value="Phone"><span class="option-icon">📱</span><span class="option-label">Phone</span></div>
+                            <div class="dropdown-item" data-value="Bag"><span class="option-icon">🎒</span><span class="option-label">Bag</span></div>
+                            <div class="dropdown-item" data-value="Book"><span class="option-icon">📚</span><span class="option-label">Book</span></div>
+                            <div class="dropdown-item" data-value="Keys"><span class="option-icon">🔑</span><span class="option-label">Keys</span></div>
+                            <div class="dropdown-item" data-value="Laptop"><span class="option-icon">💻</span><span class="option-label">Laptop</span></div>
+                            <div class="dropdown-item" data-value="Wallet"><span class="option-icon">👛</span><span class="option-label">Wallet</span></div>
+                            <div class="dropdown-item" data-value="Earbuds"><span class="option-icon">🎧</span><span class="option-label">Earbuds</span></div>
+                            <div class="dropdown-item" data-value="Umbrella"><span class="option-icon">☂️</span><span class="option-label">Umbrella</span></div>
+                            <div class="dropdown-item" data-value="Other"><span class="option-icon">📦</span><span class="option-label">Other</span></div>
+                        </div>
+                    </div>
+
+                    <div class="liquid-dropdown" id="zoneDropdown">
+                        <button type="button" class="dropdown-trigger" id="zoneTrigger">
+                            <span id="zoneSelected">Zone</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="zoneMenu">
+                            <div class="dropdown-item" data-value=""><span class="option-icon">📍</span><span class="option-label">All Zones</span></div>
+                            <div class="dropdown-item" data-value="Library"><span class="option-icon">📚</span><span class="option-label">Library</span></div>
+                            <div class="dropdown-item" data-value="Canteen"><span class="option-icon">🍽️</span><span class="option-label">Canteen</span></div>
+                            <div class="dropdown-item" data-value="Dormitory"><span class="option-icon">🏠</span><span class="option-label">Dormitory</span></div>
+                            <div class="dropdown-item" data-value="Classroom"><span class="option-icon">🏫</span><span class="option-label">Classroom</span></div>
+                            <div class="dropdown-item" data-value="Sports Area"><span class="option-icon">⚽</span><span class="option-label">Sports Area</span></div>
+                            <div class="dropdown-item" data-value="Office"><span class="option-icon">🏢</span><span class="option-label">Office</span></div>
+                            <div class="dropdown-item" data-value="Other"><span class="option-icon">📍</span><span class="option-label">Other</span></div>
+                        </div>
+                    </div>
+
+                    <div class="liquid-dropdown" id="statusDropdown">
+                        <button type="button" class="dropdown-trigger" id="statusTrigger">
+                            <span id="statusSelected">Status</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="statusMenu">
+                            <div class="dropdown-item" data-value=""><span class="option-icon">📋</span><span class="option-label">All Status</span></div>
+                            <div class="dropdown-item" data-value="Pending"><span class="option-icon">⏳</span><span class="option-label">Pending</span></div>
+                            <div class="dropdown-item" data-value="Claimed"><span class="option-icon">📬</span><span class="option-label">Claimed</span></div>
+                            <div class="dropdown-item" data-value="Returned"><span class="option-icon">✅</span><span class="option-label">Returned</span></div>
+                        </div>
+                    </div>
+
+                    <div class="liquid-dropdown" id="sortDropdown">
+                        <button type="button" class="dropdown-trigger" id="sortTrigger">
+                            <span id="sortSelected">Newest</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="sortMenu">
+                            <div class="dropdown-item" data-value="newest"><span class="option-icon">🕐</span><span class="option-label">Newest First</span></div>
+                            <div class="dropdown-item" data-value="oldest"><span class="option-icon">🕰️</span><span class="option-label">Oldest First</span></div>
+                            <div class="dropdown-item" data-value="priority"><span class="option-icon">⚡</span><span class="option-label">Priority</span></div>
+                        </div>
+                    </div>
+
+                    <button id="clearFiltersBtn" class="liquid-btn">
+                        <span>🔄</span> Clear
+                    </button>
+
+                    <button id="manageModeBtn" class="liquid-btn">
+                        <span id="manageModeIcon">🔒</span> <span id="manageModeText">Manage</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Count -->
+            <div class="results-count">
+                <span id="itemsCount">Loading...</span>
+                <span class="manage-badge" id="manageBadge" style="display: none;">
+                    <span>🔓</span> Demo Manager Mode
+                </span>
+            </div>
+
+            <!-- Items Grid -->
+            <section id="itemsGrid" class="items-grid">
+                <!-- JavaScript renders item cards here -->
+            </section>
+
+            <!-- Empty State -->
+            <div class="empty-state glass-card" id="emptyState" style="display: none;">
+                <div class="empty-icon">📦</div>
+                <h3 class="empty-title">No items found</h3>
+                <p class="empty-description">Try another keyword or clear filters</p>
+                <button class="liquid-btn liquid-btn-secondary" id="emptyClearBtn">
+                    <span>🔄</span> Clear Filters
+                </button>
+            </div>
+
+            <!-- Match Inbox -->
+            <section class="match-inbox" id="matchInboxSection">
+                <div class="match-inbox-header">
+                    <h3 class="match-inbox-title"><span>🔗</span> Match Inbox</h3>
+                </div>
+                <div class="match-list" id="matchInboxList"></div>
+            </section>
+
+            <!-- Claim Center -->
+            <section class="claim-center" id="claimCenterSection" style="display: none;">
+                <div class="claim-center-header">
+                    <h3 class="claim-center-title"><span>📬</span> Claim Center</h3>
+                </div>
+                <div class="claim-list" id="claimCenterList"></div>
+            </section>
+
+            <!-- Recently Returned -->
+            <section class="recently-section" id="recentlyReturnedSection" style="display: none;">
+                <div class="section-mini-header">
+                    <span class="section-mini-icon">✅</span>
+                    <h3 class="section-mini-title">Recently Returned</h3>
+                </div>
+                <div class="recent-items-grid" id="recentlyReturnedGrid"></div>
+            </section>
+
+        </section>
+    </main>
+
+    <!-- Drawer Overlay -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <!-- Detail Drawer -->
+    <div class="detail-drawer" id="detailDrawer">
+        <div class="drawer-header">
+            <h3 class="drawer-title">📋 Item Details</h3>
+            <button class="drawer-close" id="drawerCloseBtn">×</button>
+        </div>
+        <div class="drawer-body">
+            <h2 class="drawer-item-name" id="drawerItemName">Item Name</h2>
+            <div class="drawer-chips" id="drawerChips"></div>
+            
+            <div class="drawer-section">
+                <h4 class="drawer-section-title">📍 Location</h4>
+                <div class="drawer-info-grid">
+                    <div class="drawer-info-item">
+                        <span class="drawer-info-label">Zone</span>
+                        <span class="drawer-info-value" id="drawerItemZone"></span>
+                    </div>
+                    <div class="drawer-info-item">
+                        <span class="drawer-info-label">Date</span>
+                        <span class="drawer-info-value" id="drawerItemDate"></span>
+                    </div>
+                </div>
+                <p class="drawer-section-content" id="drawerItemLocation"></p>
+            </div>
+            
+            <div class="drawer-section">
+                <h4 class="drawer-section-title">📄 Description</h4>
+                <p class="drawer-section-content" id="drawerItemDescription"></p>
+            </div>
+            
+            <div class="drawer-section">
+                <h4 class="drawer-section-title">📞 Contact</h4>
+                <p class="drawer-section-content" id="drawerItemContact"></p>
+            </div>
+            
+            <div class="drawer-section" id="claimsSection">
+                <h4 class="drawer-section-title">📬 Claims</h4>
+                <div id="drawerItemClaims"><p style="color: var(--text-muted); font-size: 0.85rem;">No claims yet</p></div>
+            </div>
+            
+            <div class="drawer-section" id="possibleMatchesSection">
+                <h4 class="drawer-section-title">🔗 Possible Matches</h4>
+                <div id="drawerPossibleMatches"></div>
+            </div>
+            
+            <div class="drawer-section">
+                <h4 class="drawer-section-title">📅 Status Timeline</h4>
+                <div class="timeline" id="drawerTimeline"></div>
+            </div>
+            
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--glass-border);">
+                <span class="drawer-info-label">Item ID</span>
+                <span id="drawerItemId" style="font-size: 0.75rem; color: var(--text-muted); font-family: monospace;"></span>
+            </div>
+        </div>
+        <div class="drawer-footer">
+            <button class="liquid-btn liquid-btn-secondary drawer-btn" id="drawerCopyBtn" onclick="copyContact()">
+                <span>📋</span> Copy
+            </button>
+            <button class="liquid-btn liquid-btn-secondary drawer-btn" id="drawerPrintBtn" onclick="printNotice()">
+                <span>🖨️</span> Print
+            </button>
+            <button class="liquid-btn liquid-btn-secondary drawer-btn" id="drawerClaimBtn" style="display: none;">
+                <span>📬</span> Claim
+            </button>
+            <button class="liquid-btn liquid-btn-success drawer-btn" id="drawerMarkBtn" style="display: none;">
+                <span>✅</span> Returned
+            </button>
+            <button class="liquid-btn liquid-btn-danger drawer-btn" id="drawerDeleteBtn" style="display: none;">
+                <span>🗑️</span> Delete
+            </button>
+        </div>
+    </div>
+
+    <!-- Claim Modal -->
+    <div class="modal-backdrop" id="claimModal">
+        <div class="claim-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">📬 Claim Request</h3>
+                <button class="modal-close" onclick="closeClaimForm()">×</button>
+            </div>
+            <form id="claimForm">
+                <div class="form-group">
+                    <label class="form-label" for="claimName"><span>👤</span> Your Name</label>
+                    <input type="text" id="claimName" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="claimContact"><span>✉️</span> Contact Method</label>
+                    <input type="text" id="claimContact" placeholder="Email or phone number">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="claimProof"><span>📋</span> Proof Description</label>
+                    <textarea id="claimProof" rows="3" placeholder="Describe why this item belongs to you (e.g., item details, where you lost it)"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="liquid-btn liquid-btn-secondary" onclick="closeClaimForm()">Cancel</button>
+                    <button type="button" class="liquid-btn liquid-btn-primary" onclick="submitClaimRequest()">
+                        <span>📬</span> Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="glass-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="footer-icon">🔍</span>
+                <div>
+                    <span class="footer-title">Campus Lost & Found System</span>
+                    <span class="footer-subtitle">Helping students reunite with belongings</span>
+                </div>
+            </div>
+            <div class="footer-info">
+                <p>Front-end prototype • Sample data only</p>
+                <p>© 2026 Campus Services Project</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script src="script.js" defer></script>
+    <script>
+        window.addEventListener('scroll', function() {
+            var navbar = document.getElementById('navbar');
+            if (navbar) {
+                navbar.classList.toggle('nav-scrolled', window.scrollY > 20);
+            }
+        });
+    </script>
+</body>
+</html>

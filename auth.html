@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Campus Lost & Found</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body class="auth-page-body">
+    <div class="dynamic-aurora"><span class="aurora-orb orb-a"></span><span class="aurora-orb orb-b"></span><span class="aurora-orb orb-c"></span><span class="aurora-orb orb-d"></span></div>
+    <div class="aurora-bg"></div>
+
+    <div class="auth-top-bar">
+        <a href="index.html" class="back-home">← Back</a>
+        <button class="theme-toggle-btn" id="themeToggle">☀️</button>
+    </div>
+
+    <div class="auth-card">
+        <div class="auth-header-section">
+            <h2 class="auth-heading" id="authTitle">Welcome back</h2>
+            <p class="auth-subtitle-text" id="authSubtitle">Sign in to continue</p>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="signinTab">Sign In</button>
+            <button class="auth-tab" id="registerTab">Register</button>
+        </div>
+
+        <!-- 登录表单 -->
+        <form id="signinForm" class="auth-form">
+            <div class="field-group">
+                <label class="field-label">📧 Email</label>
+                <input type="email" id="signinEmail" class="field-input" placeholder="your.email@university.edu" autocomplete="email">
+                <p class="field-error" id="signinEmailError"></p>
+            </div>
+            <div class="field-group">
+                <label class="field-label">🔒 Password</label>
+                <div class="input-eye-wrapper">
+                    <input type="password" id="signinPassword" class="field-input" placeholder="Enter password" autocomplete="current-password">
+                    <button type="button" class="eye-btn" id="toggleSigninPassword">👁</button>
+                </div>
+                <p class="field-error" id="signinPasswordError"></p>
+            </div>
+            <div class="form-options">
+                <label class="remember-me"><input type="checkbox" id="rememberMe"><span class="check-box"></span> Remember</label>
+                <a href="#" class="forgot-link" id="forgotLink">Forgot?</a>
+            </div>
+            <button type="submit" class="btn-primary">Sign In</button>
+        </form>
+
+        <!-- 注册表单 -->
+        <form id="registerForm" class="auth-form" style="display: none;">
+            <div class="field-group">
+                <label class="field-label">👤 Name</label>
+                <input type="text" id="regName" class="field-input" placeholder="Your full name" autocomplete="name">
+                <p class="field-error" id="regNameError"></p>
+            </div>
+            <div class="field-group">
+                <label class="field-label">📧 Email</label>
+                <input type="email" id="regEmail" class="field-input" placeholder="your.email@university.edu" autocomplete="email">
+                <p class="field-error" id="regEmailError"></p>
+            </div>
+            <div class="field-row">
+                <div class="field-group">
+                    <label class="field-label">🔒 Password</label>
+                    <div class="input-eye-wrapper">
+                        <input type="password" id="regPassword" class="field-input" placeholder="Min 8 chars" autocomplete="new-password">
+                        <button type="button" class="eye-btn" id="toggleRegPassword">👁</button>
+                    </div>
+                    <p class="field-error" id="regPasswordError"></p>
+                </div>
+                <div class="field-group">
+                    <label class="field-label">🔒 Confirm</label>
+                    <div class="input-eye-wrapper">
+                        <input type="password" id="regConfirm" class="field-input" placeholder="Confirm" autocomplete="new-password">
+                        <button type="button" class="eye-btn" id="toggleRegConfirm">👁</button>
+                    </div>
+                    <p class="field-error" id="regConfirmError"></p>
+                </div>
+            </div>
+            <div class="field-group">
+                <label class="field-label">📱 Phone <small style="font-weight:500;opacity:0.6">(Optional)</small></label>
+                <input type="tel" id="regPhone" class="field-input" placeholder="+1 (555) 000-0000" autocomplete="tel">
+            </div>
+            
+            <!-- 服务条款 - 简化结构 -->
+            <div class="agree-row" id="agreeRow">
+                <input type="checkbox" id="agreeTerms">
+                <span class="agree-box"></span>
+                <span class="agree-text">I agree to <a href="terms.html" target="_blank">Terms</a> and <a href="privacy.html" target="_blank">Privacy Policy</a></span>
+            </div>
+            
+            <button type="submit" class="btn-primary">Create Account</button>
+        </form>
+
+        <div class="auth-footer">
+            <p id="authFooterText">No account? <a href="#" id="footerLink">Sign up</a></p>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal-overlay" id="forgotModal">
+        <div class="modal-card">
+            <h3>Reset Password</h3>
+            <p>Enter your email to receive a temporary password.</p>
+            <div class="field-group">
+                <input type="email" id="forgotEmail" class="field-input" placeholder="your.email@university.edu">
+                <p class="field-error" id="forgotError"></p>
+                <p class="field-success" id="forgotSuccess"></p>
+            </div>
+            <div class="modal-btns">
+                <button class="btn-secondary" id="closeForgot">Cancel</button>
+                <button class="btn-primary" id="submitForgot">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script src="auth.js" defer></script>
+</body>
+</html>

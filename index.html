@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Lost and Found - Home</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- 外部库 -->
+    <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+    
+    <style>
+        #webgl-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .main-layer {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .loader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader-pulse {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.5); opacity: 1; }
+        }
+        
+        /* 背景模式切换按钮 (调试用) */
+        .bg-mode-switcher {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9998;
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+        
+        .bg-mode-switcher:hover {
+            opacity: 1;
+        }
+        
+        .bg-mode-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .bg-mode-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .bg-mode-btn.active {
+            background: #5b8dee;
+        }
+    </style>
+</head>
+<body class="home-page">
+    <div class="loader" id="loader">
+        <div class="loader-pulse"></div>
+    </div>
+    
+    <div id="webgl-container"></div>
+
+    <div class="main-layer">
+        <nav class="liquid-navbar" id="navbar">
+            <a href="index.html" class="navbar-brand">
+                <span class="navbar-brand-icon">🔍</span>
+                <span class="navbar-brand-text">Lost and Found</span>
+            </a>
+            <ul class="navbar-links" id="navLinks">
+                <li><a href="index.html" class="nav-link active">Home</a></li>
+                <li><a href="report.html" class="nav-link">Report</a></li>
+                <li><a href="items.html" class="nav-link">Browse</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="auth.html" class="nav-link nav-link-auth" id="navAuthLink">Sign In</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <button class="liquid-theme-btn" id="themeToggle" title="Switch Theme">☀️</button>
+                <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <section class="hero-section">
+                <div class="hero-text">
+                    <span class="hero-badge">🔍 Campus Lost and Found Center</span>
+                    <h1 class="hero-title">Find What Matters,<br>Return What Matters</h1>
+                    <p class="hero-subtitle">A smart web system for reporting, matching, claiming, and returning lost items on campus.</p>
+                    <p class="hero-desc">Report lost or found items, search records, submit claims, and connect with others.</p>
+                    <div class="hero-btns">
+                        <a href="report.html" class="liquid-btn liquid-btn-primary liquid-btn-lg">
+                            <span>📋</span> Report Item
+                        </a>
+                        <a href="items.html" class="liquid-btn liquid-btn-secondary liquid-btn-lg">
+                            <span>🔎</span> Browse Items
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="stats-bar">
+                <div class="stats-grid">
+                    <div class="glass-card stat-card"><span class="stat-icon">📦</span><div class="stat-content"><span class="stat-number" id="homeStatTotal">0</span><span class="stat-label">Total</span></div></div>
+                    <div class="glass-card stat-card"><span class="stat-icon">🔴</span><div class="stat-content"><span class="stat-number" id="homeStatLost">0</span><span class="stat-label">Lost</span></div></div>
+                    <div class="glass-card stat-card"><span class="stat-icon">🟢</span><div class="stat-content"><span class="stat-number" id="homeStatFound">0</span><span class="stat-label">Found</span></div></div>
+                    <div class="glass-card stat-card"><span class="stat-icon">📬</span><div class="stat-content"><span class="stat-number" id="homeStatClaimed">0</span><span class="stat-label">Claimed</span></div></div>
+                    <div class="glass-card stat-card"><span class="stat-icon">✅</span><div class="stat-content"><span class="stat-number" id="homeStatReturned">0</span><span class="stat-label">Returned</span></div></div>
+                    <div class="glass-card stat-card"><span class="stat-icon">⚡</span><div class="stat-content"><span class="stat-number" id="homeStatHigh">0</span><span class="stat-label">High</span></div></div>
+                </div>
+            </section>
+
+            <section class="bento-section">
+                <div class="section-header">
+                    <h2 class="section-title">Quick Actions</h2>
+                    <p class="section-subtitle">Report, search, and manage lost/found items</p>
+                </div>
+                <div class="bento-grid">
+                    <a href="report.html" class="glass-card bento-card"><span class="bento-icon">📋</span><div><h3>Report Lost Item</h3><p>Quickly report an item you lost.</p></div></a>
+                    <a href="report.html" class="glass-card bento-card"><span class="bento-icon">📦</span><div><h3>Report Found Item</h3><p>Help others by reporting found items.</p></div></a>
+                    <a href="items.html" class="glass-card bento-card"><span class="bento-icon">🔎</span><div><h3>Browse Items</h3><p>Search all lost and found records.</p></div></a>
+                    <a href="items.html" class="glass-card bento-card bento-wide"><span class="bento-icon">🔗</span><div><h3>Smart Matching</h3><p>System suggests possible matches.</p></div></a>
+                    <a href="items.html" class="glass-card bento-card bento-wide"><span class="bento-icon">📬</span><div><h3>Claim Request</h3><p>Submit a claim with proof.</p></div></a>
+                    <a href="contact.html" class="glass-card bento-card bento-wide"><span class="bento-icon">💬</span><div><h3>Get Help</h3><p>Contact the help desk.</p></div></a>
+                </div>
+            </section>
+
+            <section class="how-section">
+                <div class="section-header">
+                    <h2 class="section-title">How It Works</h2>
+                    <p class="section-subtitle">Simple steps to get your item back</p>
+                </div>
+                <div class="steps-row">
+                    <div class="glass-card step-card"><span class="step-num">1</span><span class="step-icon">📋</span><h4>Report</h4><p>Submit details</p></div>
+                    <span class="step-arrow">→</span>
+                    <div class="glass-card step-card"><span class="step-num">2</span><span class="step-icon">🔗</span><h4>Match</h4><p>System finds matches</p></div>
+                    <span class="step-arrow">→</span>
+                    <div class="glass-card step-card"><span class="step-num">3</span><span class="step-icon">📬</span><h4>Claim</h4><p>Submit your proof</p></div>
+                    <span class="step-arrow">→</span>
+                    <div class="glass-card step-card"><span class="step-num">4</span><span class="step-icon">✅</span><h4>Return</h4><p>Item is returned</p></div>
+                </div>
+            </section>
+
+            <section class="activity-section" id="activitySection">
+                <div class="glass-card activity-card">
+                    <h3 class="activity-title">📋 Recent Activity</h3>
+                    <div id="activityLogPreview"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="glass-footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="footer-icon">🔍</span>
+                    <div>
+                        <span class="footer-title">Campus Lost and Found System</span>
+                        <span class="footer-subtitle">Helping students reunite with belongings</span>
+                    </div>
+                </div>
+                <div class="footer-info">
+                    <p>Front-end prototype • Sample data only</p>
+                    <p>© 2026 Campus Services Project</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script src="script.js" defer></script>
+    
+    <!-- Mood Orb + Fluid Wave - 2025 热门效果 -->
+    <script>
+    (function() {
+        'use strict';
+        
+        if (typeof THREE === 'undefined') {
+            // Critical error - Three.js is required for WebGL effects
+            document.getElementById('loader').classList.add('hidden');
+            return;
+        }
+        
+        // 主题配置
+        const THEMES = {
+            dark: {
+                bg: 0x070d1a,
+                orb: 0x5b8dee,
+                orbGlow: 0x8ec5ff,
+                wave1: 0x5b8dee,
+                wave2: 0x9b6dff,
+                wave3: 0x4fd1c5,
+                particle: 0x60a5fa,
+                aura: 0x667eea
+            },
+            light: {
+                bg: 0xfaf8f5,
+                orb: 0x4a90d9,      // 深天蓝 - 更好可见
+                orbGlow: 0x6ab0ff,   // 亮蓝
+                wave1: 0x7eb8e8,     // 中蓝
+                wave2: 0x94b8e0,     // 淡蓝灰
+                wave3: 0xa8c4d8,     // 冷灰蓝
+                particle: 0x5a9fd4,
+                aura: 0x4a90d9
+            }
+        };
+        
+        let scene, camera, renderer;
+        let orb, orbGlow, waves = [], particles, auraRing;
+        let currentTheme = 'dark';
+        let time = 0;
+        
+        let mouseX = 0, mouseY = 0;
+        let targetMouseX = 0, targetMouseY = 0;
+        let scrollY = 0;
+        
+        const container = document.getElementById('webgl-container');
+        
+        function init() {
+            try {
+                scene = new THREE.Scene();
+                
+                camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+                camera.position.z = 8;
+                
+                renderer = new THREE.WebGLRenderer({ 
+                    antialias: true, 
+                    alpha: true,
+                    powerPreference: 'high-performance'
+                });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                container.appendChild(renderer.domElement);
+                
+                currentTheme = localStorage.getItem('theme') || 'dark';
+                
+                createOrb();
+                createAuraRing();
+                createWaves();
+                createParticles();
+                
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('wheel', onScroll, { passive: true });
+                window.addEventListener('resize', onResize);
+                observeTheme();
+                
+                animate();
+                
+                setTimeout(() => {
+                    document.getElementById('loader').classList.add('hidden');
+                }, 600);
+                
+            } catch (e) {
+                // Initialization failed silently - WebGL effects unavailable
+                document.getElementById('loader').classList.add('hidden');
+            }
+        }
+        
+        // Mood Orb - 核心氛围球
+        function createOrb() {
+            const config = THEMES[currentTheme];
+            
+            // 主球体
+            const geometry = new THREE.SphereGeometry(1.5, 64, 64);
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    uTime: { value: 0 },
+                    uColor: { value: new THREE.Color(config.orb) },
+                    uGlow: { value: new THREE.Color(config.orbGlow) },
+                    uMouseX: { value: 0 },
+                    uMouseY: { value: 0 },
+                    uHover: { value: 0 }
+                },
+                vertexShader: `
+                    uniform float uTime;
+                    varying vec3 vNormal;
+                    varying vec3 vPosition;
+                    void main() {
+                        vNormal = normalize(normalMatrix * normal);
+                        vPosition = position;
+                        
+                        // 呼吸变形
+                        vec3 pos = position;
+                        float breathe = sin(uTime * 0.8) * 0.02;
+                        pos *= 1.0 + breathe;
+                        
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    precision highp float;
+                    varying vec3 vNormal;
+                    varying vec3 vPosition;
+                    uniform vec3 uColor;
+                    uniform vec3 uGlow;
+                    uniform float uTime;
+                    uniform float uMouseX;
+                    uniform float uMouseY;
+                    uniform float uHover;
+                    
+                    void main() {
+                        vec3 viewDir = vec3(0.0, 0.0, 1.0);
+                        
+                        // Fresnel 边缘发光
+                        float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.0);
+                        
+                        // 高光
+                        vec3 lightDir = normalize(vec3(uMouseX * 0.3, uMouseY * 0.3, 1.0));
+                        float specular = pow(max(dot(vNormal, lightDir), 0.0), 32.0);
+                        
+                        // 颜色
+                        vec3 color = uColor;
+                        color += uGlow * fresnel * 0.8;
+                        color += vec3(1.0) * specular * 0.6;
+                        
+                        // Hover 增强
+                        color += uHover * 0.2;
+                        
+                        // 内部发光
+                        float innerGlow = smoothstep(0.0, 0.5, length(vPosition));
+                        color += uGlow * (1.0 - innerGlow) * 0.3;
+                        
+                        // 呼吸发光
+                        float breathe = sin(uTime * 0.8) * 0.1 + 0.9;
+                        color *= breathe;
+                        
+                        float alpha = 0.85 + fresnel * 0.15;
+                        
+                        gl_FragColor = vec4(color, alpha);
+                    }
+                `,
+                transparent: true,
+                side: THREE.FrontSide,
+                depthWrite: false
+            });
+            
+            orb = new THREE.Mesh(geometry, material);
+            orb.position.set(2.5, 0.5, 0);
+            scene.add(orb);
+            
+            // 发光层
+            const glowGeo = new THREE.SphereGeometry(2.0, 32, 32);
+            const glowMat = new THREE.ShaderMaterial({
+                uniforms: {
+                    uTime: { value: 0 },
+                    uColor: { value: new THREE.Color(config.orbGlow) }
+                },
+                vertexShader: `
+                    varying vec3 vNormal;
+                    void main() {
+                        vNormal = normalize(normalMatrix * normal);
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    precision mediump float;
+                    varying vec3 vNormal;
+                    uniform vec3 uColor;
+                    uniform float uTime;
+                    void main() {
+                        float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
+                        float breathe = sin(uTime * 0.5) * 0.1 + 0.9;
+                        gl_FragColor = vec4(uColor, intensity * 0.4 * breathe);
+                    }
+                `,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                side: THREE.BackSide,
+                depthWrite: false
+            });
+            
+            orbGlow = new THREE.Mesh(glowGeo, glowMat);
+            orbGlow.position.copy(orb.position);
+            scene.add(orbGlow);
+        }
+        
+        // 光环环
+        function createAuraRing() {
+            const config = THEMES[currentTheme];
+            
+            const geometry = new THREE.TorusGeometry(2.2, 0.05, 16, 100);
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    uTime: { value: 0 },
+                    uColor: { value: new THREE.Color(config.aura) }
+                },
+                vertexShader: `
+                    varying vec2 vUv;
+                    varying float vAngle;
+                    void main() {
+                        vUv = uv;
+                        vAngle = atan(position.y, position.x);
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    precision mediump float;
+                    varying vec2 vUv;
+                    varying float vAngle;
+                    uniform vec3 uColor;
+                    uniform float uTime;
+                    void main() {
+                        float alpha = sin(vAngle * 3.0 + uTime * 0.5) * 0.3 + 0.5;
+                        alpha *= smoothstep(0.0, 0.2, vUv.y) * smoothstep(1.0, 0.8, vUv.y);
+                        gl_FragColor = vec4(uColor, alpha * 0.6);
+                    }
+                `,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            
+            auraRing = new THREE.Mesh(geometry, material);
+            auraRing.position.copy(orb.position);
+            auraRing.rotation.x = Math.PI * 0.4;
+            scene.add(auraRing);
+        }
+        
+        // 波浪背景
+        function createWaves() {
+            const config = THEMES[currentTheme];
+            
+            const geometry = new THREE.PlaneGeometry(14, 10, 96, 48);
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    uTime: { value: 0 },
+                    uMouseX: { value: 0 },
+                    uMouseY: { value: 0 },
+                    uWave1: { value: new THREE.Color(config.wave1) },
+                    uWave2: { value: new THREE.Color(config.wave2) },
+                    uWave3: { value: new THREE.Color(config.wave3) },
+                    uBg: { value: new THREE.Color(config.bg) }
+                },
+                vertexShader: `
+                    uniform float uTime;
+                    uniform float uMouseX;
+                    uniform float uMouseY;
+                    varying vec2 vUv;
+                    varying float vElevation;
+                    
+                    vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+                    vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+                    vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+                    
+                    float snoise(vec2 v) {
+                        const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+                        vec2 i = floor(v + dot(v, C.yy));
+                        vec2 x0 = v - i + dot(i, C.xx);
+                        vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+                        vec4 x12 = x0.xyxy + C.xxzz;
+                        x12.xy -= i1;
+                        i = mod289(i);
+                        vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
+                        vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+                        m = m*m; m = m*m;
+                        vec3 x = 2.0 * fract(p * C.www) - 1.0;
+                        vec3 h = abs(x) - 0.5;
+                        vec3 ox = floor(x + 0.5);
+                        vec3 a0 = x - ox;
+                        m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
+                        vec3 g;
+                        g.x = a0.x * x0.x + h.x * x0.y;
+                        g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+                        return 130.0 * dot(m, g);
+                    }
+                    
+                    void main() {
+                        vUv = uv;
+                        vec3 pos = position;
+                        
+                        float wave1 = sin(pos.x * 1.2 + uTime * 0.6) * 0.12;
+                        float wave2 = sin(pos.y * 1.8 + uTime * 0.5) * 0.08;
+                        float wave3 = cos(pos.x * 0.8 + pos.y * 1.2 + uTime * 0.3) * 0.06;
+                        float n1 = snoise(vec2(pos.x + uTime * 0.15, pos.y + uTime * 0.1)) * 0.1;
+                        float mouseWave = snoise(vec2(pos.x * 0.3 + uMouseX, pos.y * 0.3 + uMouseY)) * 0.08;
+                        
+                        float elevation = wave1 + wave2 + wave3 + n1 + mouseWave;
+                        vElevation = elevation;
+                        
+                        pos.z += elevation;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    precision highp float;
+                    varying vec2 vUv;
+                    varying float vElevation;
+                    uniform vec3 uWave1;
+                    uniform vec3 uWave2;
+                    uniform vec3 uWave3;
+                    uniform vec3 uBg;
+                    
+                    void main() {
+                        float mix1 = smoothstep(-0.15, 0.2, vElevation);
+                        float mix2 = smoothstep(0.0, 0.2, vElevation);
+                        
+                        vec3 color = uBg;
+                        color = mix(color, uWave1, mix1 * 0.5);
+                        color = mix(color, uWave2, mix2 * 0.4);
+                        color = mix(color, uWave3, smoothstep(0.08, 0.25, vElevation) * 0.3);
+                        
+                        float vignette = 1.0 - smoothstep(0.3, 0.8, length(vUv - 0.5) * 1.5);
+                        color *= vignette * 0.3 + 0.7;
+                        
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `,
+                transparent: false,
+                side: THREE.DoubleSide
+            });
+            
+            const wave = new THREE.Mesh(geometry, material);
+            wave.rotation.x = -Math.PI * 0.35;
+            wave.position.z = -4;
+            scene.add(wave);
+            waves.push(wave);
+        }
+        
+        // 粒子
+        function createParticles() {
+            const config = THEMES[currentTheme];
+            const count = 80;
+            const positions = new Float32Array(count * 3);
+            
+            for (let i = 0; i < count; i++) {
+                const angle = (i / count) * Math.PI * 2;
+                const radius = 2.5 + Math.random() * 1.5;
+                positions[i * 3] = Math.cos(angle) * radius + 2.5;
+                positions[i * 3 + 1] = Math.sin(angle) * radius + 0.5;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 2;
+            }
+            
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            
+            const material = new THREE.PointsMaterial({
+                size: 0.05,
+                color: config.particle,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+            
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+        }
+        
+        // 主题切换
+        function observeTheme() {
+            const observer = new MutationObserver(() => {
+                const theme = document.documentElement.dataset.theme;
+                if (theme && theme !== currentTheme) {
+                    currentTheme = theme;
+                    updateTheme();
+                }
+            });
+            observer.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['data-theme']
+            });
+        }
+        
+        function updateTheme() {
+            const config = THEMES[currentTheme];
+            
+            renderer.setClearColor(config.bg, 1);
+            
+            if (orb) {
+                orb.material.uniforms.uColor.value.setHex(config.orb);
+                orb.material.uniforms.uGlow.value.setHex(config.orbGlow);
+            }
+            if (orbGlow) {
+                orbGlow.material.uniforms.uColor.value.setHex(config.orbGlow);
+            }
+            if (auraRing) {
+                auraRing.material.uniforms.uColor.value.setHex(config.aura);
+            }
+            
+            waves.forEach(wave => {
+                wave.material.uniforms.uWave1.value.setHex(config.wave1);
+                wave.material.uniforms.uWave2.value.setHex(config.wave2);
+                wave.material.uniforms.uWave3.value.setHex(config.wave3);
+                wave.material.uniforms.uBg.value.setHex(config.bg);
+            });
+            
+            if (particles) {
+                particles.material.color.setHex(config.particle);
+            }
+        }
+        
+        // Events
+        function onMouseMove(e) {
+            targetMouseX = (e.clientX / window.innerWidth - 0.5) * 3;
+            targetMouseY = (e.clientY / window.innerHeight - 0.5) * 3;
+        }
+        
+        function onScroll(e) {
+            scrollY += e.deltaY * 0.0005;
+            scrollY = Math.max(-1.5, Math.min(1.5, scrollY));
+        }
+        
+        function onResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        // 动画
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            time += 0.016;
+            
+            mouseX += (targetMouseX - mouseX) * 0.06;
+            mouseY += (targetMouseY - mouseY) * 0.06;
+            
+            // 相机
+            camera.position.x = mouseX * 0.3;
+            camera.position.y = -mouseY * 0.2 + scrollY * 1.2;
+            camera.lookAt(0, 0, 0);
+            
+            // Orb
+            if (orb) {
+                orb.material.uniforms.uTime.value = time;
+                orb.material.uniforms.uMouseX.value = mouseX;
+                orb.material.uniforms.uMouseY.value = mouseY;
+                
+                // 跟随鼠标
+                orb.position.x = 2.5 + mouseX * 0.3;
+                orb.position.y = 0.5 + mouseY * 0.2;
+                
+                // 浮动
+                orb.position.y += Math.sin(time * 0.5) * 0.05;
+                
+                // Hover 检测
+                const dist = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
+                orb.material.uniforms.uHover.value = Math.max(0, 1 - dist * 0.3);
+            }
+            
+            if (orbGlow) {
+                orbGlow.material.uniforms.uTime.value = time;
+                orbGlow.position.copy(orb.position);
+            }
+            
+            if (auraRing) {
+                auraRing.material.uniforms.uTime.value = time;
+                auraRing.position.copy(orb.position);
+                auraRing.rotation.z = time * 0.1;
+            }
+            
+            // 波浪
+            waves.forEach(wave => {
+                wave.material.uniforms.uTime.value = time;
+                wave.material.uniforms.uMouseX.value = mouseX;
+                wave.material.uniforms.uMouseY.value = mouseY;
+            });
+            
+            // 粒子环绕
+            if (particles) {
+                particles.rotation.y = time * 0.15;
+                const positions = particles.geometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i += 3) {
+                    const offset = i / 3;
+                    positions[i + 1] += Math.sin(time + offset) * 0.002;
+                }
+                particles.geometry.attributes.position.needsUpdate = true;
+            }
+            
+            scrollY *= 0.95;
+            
+            renderer.render(scene, camera);
+        }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+        
+    })();
+    </script>
+    
+    <script>
+        window.addEventListener('scroll', function() {
+            var nav = document.getElementById('navbar');
+            if (nav) {
+                nav.classList.toggle('nav-scrolled', window.scrollY > 20);
+            }
+        });
+    </script>
+</body>
+</html>

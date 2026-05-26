@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - Campus Lost & Found</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="contact-page-body">
+    <div class="dynamic-aurora" aria-hidden="true">
+        <span class="aurora-orb orb-a"></span>
+        <span class="aurora-orb orb-b"></span>
+        <span class="aurora-orb orb-c"></span>
+        <span class="aurora-orb orb-d"></span>
+    </div>
+    <!-- Layer 1: Dynamic Aurora Atmosphere -->
+    <div class="aurora-bg"></div>
+
+    <!-- Liquid Glass Navigation -->
+    <nav class="liquid-navbar" id="navbar">
+        <a href="index.html" class="navbar-brand">
+            <span class="navbar-brand-icon">🔍</span>
+            <span class="navbar-brand-text">Lost & Found</span>
+        </a>
+        <ul class="navbar-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="report.html" class="nav-link">Report</a></li>
+            <li><a href="items.html" class="nav-link">Browse</a></li>
+            <li><a href="contact.html" class="nav-link active">Contact</a></li>
+            <li><a href="auth.html" class="nav-link nav-link-auth" id="navAuthLink">Sign In</a></li>
+        </ul>
+        <div class="navbar-actions">
+            <button class="liquid-theme-btn" id="themeToggle" title="Switch Theme">☀️</button>
+            <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <main class="contact-page">
+        <section class="contact-shell">
+            <header class="contact-header">
+                <h1 class="page-title">Help Center</h1>
+                <p class="page-subtitle">Get help with your lost or found items</p>
+            </header>
+
+            <section class="contact-layout">
+                <aside class="contact-info-card">
+                    <h3>📞 Contact Information</h3>
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <span class="contact-icon">📧</span>
+                            <div>
+                                <p class="contact-label">Email</p>
+                                <p class="contact-value">lostandfound@campus.edu</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">📍</span>
+                            <div>
+                                <p class="contact-label">Office</p>
+                                <p class="contact-value">Student Services, Room 102</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">⏰</span>
+                            <div>
+                                <p class="contact-label">Hours</p>
+                                <p class="contact-value">Mon-Fri: 9AM - 5PM</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <span class="contact-icon">📱</span>
+                            <div>
+                                <p class="contact-label">Phone</p>
+                                <p class="contact-value">+1 (555) 123-4567</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="help-tips">
+                        <h4>💡 Quick Tips</h4>
+                        <ul>
+                            <li>Report lost items immediately</li>
+                            <li>Include distinctive features</li>
+                            <li>Check Browse page regularly</li>
+                            <li>Provide accurate location</li>
+                            <li>Keep proof of ownership</li>
+                        </ul>
+                    </div>
+                    <div class="quick-links-card">
+                        <h4>🔗 Quick Links</h4>
+                        <a href="report.html" class="liquid-btn liquid-btn-sm">📋 Report Item</a>
+                        <a href="items.html" class="liquid-btn liquid-btn-sm">🔎 Browse Items</a>
+                    </div>
+                </aside>
+
+                <form id="contactForm" class="contact-message-card">
+                    <h3>📬 Send us a Message</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="contactName"><span>👤</span> Your Name</label>
+                        <input type="text" id="contactName" class="form-input" placeholder="Enter your name">
+                        <p class="form-error" id="nameError"></p>
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label class="form-label" for="contactEmail"><span>✉️</span> Email Address</label>
+                        <input type="text" id="contactEmail" class="form-input" placeholder="your.email@example.edu">
+                        <p class="form-error" id="emailError"></p>
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label class="form-label" for="contactSubject"><span>📋</span> Subject</label>
+                        <div class="liquid-dropdown" id="subjectDropdown">
+                            <button type="button" class="dropdown-trigger" id="subjectTrigger">
+                                <span>Select Subject</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                            <div class="dropdown-menu" id="subjectMenu">
+                                <div class="dropdown-item" data-value="lost">🔴 Lost Item Inquiry</div>
+                                <div class="dropdown-item" data-value="found">🟢 Found Item Report</div>
+                                <div class="dropdown-item" data-value="claim">📬 Claim Status</div>
+                                <div class="dropdown-item" data-value="suggestion">💡 Suggestion</div>
+                                <div class="dropdown-item" data-value="other">📝 Other</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label class="form-label" for="contactMessage"><span>💬</span> Message</label>
+                        <textarea id="contactMessage" class="form-textarea" rows="5" placeholder="How can we help you?"></textarea>
+                        <p class="form-error" id="messageError"></p>
+                    </div>
+                    <button type="submit" id="sendMessageBtn" class="liquid-btn liquid-btn-primary liquid-btn-lg" style="width: 100%; margin-top: 1.5rem; cursor: pointer;">
+                        <span>📤</span> Send Message
+                    </button>
+                </form>
+            </section>
+        </section>
+    </main>
+
+    <footer class="glass-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="footer-icon">🔍</span>
+                <div>
+                    <span class="footer-title">Campus Lost & Found System</span>
+                    <span class="footer-subtitle">Helping students reunite with belongings</span>
+                </div>
+            </div>
+            <div class="footer-info">
+                <p>Front-end prototype • Sample data only</p>
+                <p>© 2026 Campus Services Project</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <script src="script.js" defer></script>
+    <script>
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 20) navbar.classList.add('nav-scrolled');
+            else navbar.classList.remove('nav-scrolled');
+        });
+
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.dropdown-menu.active').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.dropdown-trigger.active').forEach(t => t.classList.remove('active'));
+        });
+    </script>
+</body>
+</html>
