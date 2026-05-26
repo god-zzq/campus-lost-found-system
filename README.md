@@ -233,19 +233,6 @@ npx serve
 
 ---
 
-## 👨‍💻 关于作者
-
-```
-┌────────────────────────────────────────┐
-│  姓名：zzq                             │
-│  学号：1625947291                      │
-│  课程：HTML / Web Information Systems  │
-│  时间：2026                            │
-└────────────────────────────────────────┘
-```
-
----
-
 <p align="center">
   <strong>🎓 Campus Lost & Found Web System</strong>
   <br>
