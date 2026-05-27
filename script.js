@@ -268,19 +268,21 @@ const calculateMatchScore = (item1, item2) => {
  */
 const findPossibleMatches = (newItem, limit = 3) => {
     const allItems = getAllItems();
-    // 失物找招领，招领找失物
     const targetType = newItem.type === 'Lost' ? 'Found' : 'Lost';
     
-    return allItems
-        .filter(item => item.id !== newItem.id && item.type === targetType && item.status === 'Pending')
-        .map(item => ({ 
-            item, 
-            score: calculateMatchScore(newItem, item), 
-            level: score >= 55 ? 'High' : score >= 40 ? 'Medium' : 'Low' 
-        }))
-        .filter(m => m.score >= 25)  // 最低25分才算匹配
-        .sort((a, b) => b.score - a.score)
-        .slice(0, limit);
+    const results = [];
+    allItems.forEach(item => {
+        if (item.id !== newItem.id && item.type === targetType && item.status === 'Pending') {
+            const matchScore = calculateMatchScore(newItem, item);
+            if (matchScore >= 25) {
+                const level = matchScore >= 55 ? 'High' : matchScore >= 40 ? 'Medium' : 'Low';
+                results.push({ item: item, score: matchScore, level: level });
+            }
+        }
+    });
+    
+    results.sort((a, b) => b.score - a.score);
+    return results.slice(0, limit);
 };
 
 /**
@@ -760,11 +762,9 @@ const initDetailDrawer = () => {
 };
 
 const openDetailView = (itemId) => {
-    console.log('openDetailView called with:', itemId);
     const items = getAllItems();
     const item = items.find(i => i.id === itemId);
-    console.log('Found item:', item);
-    if (!item) { console.log('Item not found'); return; }
+    if (!item) { return; }
     
     currentItemId = itemId;
     currentItemData = item;
