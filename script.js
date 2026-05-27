@@ -596,7 +596,7 @@ const renderItems = () => {
 const createItemCard = (item) => {
     const manage = currentManageMode;
     const claims = item.claims?.length > 0;
-    return `<div class="item-card glass-card glass-card-normal">
+    return `<div class="item-card glass-card glass-card-normal" onclick="console.log('Card clicked:', '${item.id}'); openDetailView('${item.id}')">
         <div class="item-card-header">
             <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
                 <span class="glass-chip chip-${item.type.toLowerCase()}">${item.type === 'Lost' ? '🔴' : '🟢'} ${item.type}</span>
@@ -612,7 +612,7 @@ const createItemCard = (item) => {
         </div>
         <p class="item-description">${escapeHtml(item.description)}</p>
         <div class="item-footer">
-            <button class="liquid-btn liquid-btn-sm liquid-btn-secondary" style="flex: 2;" onclick="openDetailView('${item.id}')"><span>👁️</span> Details</button>
+            <button class="liquid-btn liquid-btn-sm liquid-btn-secondary" style="flex: 2;" onclick="event.stopPropagation(); openDetailView('${item.id}')"><span>👁️</span> Details</button>
             ${item.status === 'Pending' && item.type === 'Found' && !manage ? `<button class="liquid-btn liquid-btn-sm liquid-btn-secondary" style="flex: 1;" onclick="openClaimForm('${item.id}')"><span>📬</span></button>` : ''}
             ${manage ? `<button class="liquid-btn liquid-btn-sm liquid-btn-success" style="flex: 1;" onclick="markAsReturned('${item.id}')"><span>✅</span></button><button class="liquid-btn liquid-btn-sm liquid-btn-danger" style="flex: 1;" onclick="deleteItem('${item.id}')"><span>🗑️</span></button>` : ''}
         </div>
@@ -760,9 +760,11 @@ const initDetailDrawer = () => {
 };
 
 const openDetailView = (itemId) => {
+    console.log('openDetailView called with:', itemId);
     const items = getAllItems();
     const item = items.find(i => i.id === itemId);
-    if (!item) { return; } // Item not found silently handled
+    console.log('Found item:', item);
+    if (!item) { console.log('Item not found'); return; }
     
     currentItemId = itemId;
     currentItemData = item;
@@ -1071,7 +1073,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 检查是否需要强制登录
     const currentPage = window.location.pathname.split('/').pop();
-    const publicPages = ['auth.html', 'index.html', 'items.html', 'contact.html', 'report.html', ''];
+    const publicPages = ['auth.html', 'index.html', ''];
     
     // 如果不是公开页面且未登录，重定向到登录页
     if (!publicPages.includes(currentPage)) {
