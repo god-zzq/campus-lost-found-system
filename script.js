@@ -1071,7 +1071,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 检查是否需要强制登录
     const currentPage = window.location.pathname.split('/').pop();
-    const publicPages = ['auth.html', 'index.html', ''];
+    const publicPages = ['auth.html', 'index.html', 'items.html', 'contact.html', 'report.html', ''];
     
     // 如果不是公开页面且未登录，重定向到登录页
     if (!publicPages.includes(currentPage)) {
