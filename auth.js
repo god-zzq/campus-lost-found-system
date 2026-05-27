@@ -194,9 +194,27 @@
         initTheme();
     }
 
+    // 初始化默认用户
+    function initDefaultUsers() {
+        var users = JSON.parse(localStorage.getItem('users') || '[]');
+        var hasDefault = users.find(function(u) { return u.email === 'DCI2026@lecnam.net'; });
+        if (!hasDefault) {
+            users.push({
+                id: 'USR-' + Math.random().toString(36).substr(2, 8).toUpperCase(),
+                name: 'DCI Student',
+                email: 'DCI2026@lecnam.net',
+                password: 'DCIDCI2026',
+                phone: '',
+                createdAt: Date.now()
+            });
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+    }
+
     // 初始化
     document.addEventListener('DOMContentLoaded', function() {
         initTheme();
+        initDefaultUsers();
 
         // Tab 切换
         document.getElementById('signinTab').onclick = function() { switchTab('signin'); };
